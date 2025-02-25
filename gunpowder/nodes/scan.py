@@ -12,6 +12,7 @@ from gunpowder.roi import Roi
 from .batch_filter import BatchFilter
 
 logger = logging.getLogger(__name__)
+logger.setLevel(logging.DEBUG)
 
 
 class ScanCallback(ABC):
@@ -231,6 +232,7 @@ class Scan(BatchFilter):
 
             logger.debug("upstream ROI is %s", spec[key].roi)
 
+            print(f"{reference_spec=}")
             for r, s in zip(reference_spec.roi.shape, spec[key].roi.shape):
                 assert s is None or r <= s, (
                     "reference %s with ROI %s does not fit into provided "

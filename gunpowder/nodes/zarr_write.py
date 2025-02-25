@@ -51,7 +51,7 @@ class ZarrWrite(BatchFilter):
     def __init__(
         self,
         dataset_names,
-        output_dir=".",
+        output_dir="",
         output_filename="output.hdf",
         compression_type=None,
         dataset_dtypes=None,

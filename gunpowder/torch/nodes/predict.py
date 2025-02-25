@@ -85,13 +85,22 @@ class Predict(GenericPredict):
         self.intermediate_layers: dict[ArrayKey, Any] = {}
 
     def start(self):
-        # Issue #188
-        self.use_cuda = torch.cuda.is_available() and self.device_string.__contains__(
-            "cuda"
-        )
+        device = "cpu"
+        if torch.cuda.is_available() and self.device_string.__contains__("cuda"):
+            self.device = torch.device(self.device_string)
+            device_type = "cuda"
+            print("gunpowder start: device=cuda")
+        elif torch.xpu.is_available(): # and ?
+            # honor input string or just use current device
+            #device = self.device_string
+            self.device = torch.xpu.current_device()
+            device_type = "xpu"
+            print("gunpowder start: device=xpu")
+        else:
+            self.device = torch.device("cpu")
+            device_type = "cpu"
+            print("gunpowder start: device=cpu")
 
-        logger.info(f"Predicting on {'gpu' if self.use_cuda else 'cpu'}")
-        self.device = torch.device(self.device_string if self.use_cuda else "cpu")
         try:
             self.model = self.model.to(self.device)
         except RuntimeError as e:
@@ -102,7 +111,7 @@ class Predict(GenericPredict):
             ) from e
 
         if self.checkpoint is not None:
-            checkpoint = torch.load(self.checkpoint, map_location=self.device)
+            checkpoint = torch.load(self.checkpoint, map_location=device_type)
             if "model_state_dict" in checkpoint:
                 self.model.load_state_dict(checkpoint["model_state_dict"])
             else:

@@ -34,15 +34,23 @@ try:
 except ImportError:
     pyklb = NoSuchModule("pyklb")
 
+"""
 try:
     import tensorflow
 except ImportError:
     tensorflow = NoSuchModule("tensorflow")
+"""
 
 try:
     import torch
 except ImportError:
     torch = NoSuchModule("torch")
+
+try:
+    # import for Aurora
+    import intel_extension_for_pytorch as ipex
+except ImportError:
+    torch = NoSuchModule("ipex")
 
 try:
     import tensorboardX

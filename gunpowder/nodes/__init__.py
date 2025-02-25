@@ -28,6 +28,7 @@ from .noise_augment import NoiseAugment
 from .normalize import Normalize
 from .pad import Pad
 from .precache import PreCache
+from .precomputed_source import PrecomputedSource
 from .print_profiling_stats import PrintProfilingStats
 from .random_location import RandomLocation
 from .random_provider import RandomProvider
